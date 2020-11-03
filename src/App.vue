@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <h1>台球厅管理系统</h1>
     <!-- 路由出口 -->
     <router-view/>
   </div>
@@ -8,7 +7,14 @@
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  data () {
+    return {}
+  },
+  methods: {
+  },
+  created () {
+  }
 }
 </script>
 
