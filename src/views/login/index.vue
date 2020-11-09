@@ -88,14 +88,13 @@ export default {
 
       login(user).then(res => {
         // 登录成功
-        console.log(res)
         if (res.data.code === 201) {
+          window.localStorage.setItem('token', res.data.token)
           this.$message({
             showClose: true,
             message: '登录成功',
             type: 'success'
           })
-
           // 跳转到首页
           // this.$router.push('/')
           this.$router.push({
@@ -114,7 +113,6 @@ export default {
       // eslint-disable-next-line handle-callback-err
       }).catch(err => {
         // 登录失败
-        console.log('登录失败', err)
         this.$message({
           showClose: true,
           message: '登录失败,系统错误',

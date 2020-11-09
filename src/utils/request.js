@@ -9,8 +9,26 @@ const request = axios.create({
 })
 
 // 请求拦截器
+request.interceptors.request.use(
+  function (config) {
+  // 获取浏览器保存的token
+    const token = window.localStorage.getItem('token')
+    if (token) {
+      config.headers.Authorzation = token
+    }
+    return config
+  },
+  function (error) {
+    return Promise.reject(error)
+  }
+)
 
 // 响应拦截器
+// request.interceptors.response.use(function (response) {
+//   return response
+// }, function (error) {
+//   return Promise.reject(error)
+// })
 
 // 导出请求方法
 export default request

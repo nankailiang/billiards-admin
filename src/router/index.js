@@ -6,6 +6,7 @@ import VueRouter from 'vue-router'
 import Login from '@/views/login'
 import Home from '@/views/home'
 import Layout from '@/views/layout'
+import Member from '@/views/member'
 
 Vue.use(VueRouter)
 
@@ -25,6 +26,11 @@ const routes = [
         path: '',
         name: 'home',
         component: Home
+      },
+      {
+        path: 'member',
+        name: 'member',
+        component: Member
       }
     ]
   }
@@ -32,6 +38,21 @@ const routes = [
 
 const router = new VueRouter({
   routes
+})
+
+// 路由导航守卫
+router.beforeEach((to, from, next) => {
+  const token = window.localStorage.getItem('token')
+
+  if (to.path !== '/login') {
+    if (token) {
+      next()
+    } else {
+      next('/login')
+    }
+  } else {
+    next()
+  }
 })
 
 export default router

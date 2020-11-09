@@ -26,7 +26,7 @@
                 <el-dropdown>
                     <div class="avatar-wrap">
                         <img class="avatar" src="./avatar.jpg">
-                        <span>用户昵称</span>
+                        <span>{{ user.call }}</span>
                         <i class="el-icon-arrow-down el-icon--right"></i>
                     </div>
                     <!-- <span class="el-dropdown-link">
@@ -34,7 +34,10 @@
                     </span> -->
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item>设置</el-dropdown-item>
-                        <el-dropdown-item>退出</el-dropdown-item>
+                        <!-- 默认组件不支持原生的事件，需要做特殊处理.native修饰符 -->
+                        <el-dropdown-item
+                            @click.native="onLogout"
+                        >退出</el-dropdown-item>
                         <el-dropdown-item>保留</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
@@ -49,6 +52,8 @@
 
 <script>
 import AppAside from './components/aside'
+import { getUserInfo } from '@/api/user'
+
 export default {
   name: 'LayoutIndex',
   components: {
@@ -63,9 +68,39 @@ export default {
   },
   computed: {},
   watch: {},
-  created () {},
+  created () {
+    this.loadInfo()
+  },
   mounted () {},
-  mothods: {}
+  methods: {
+    // 除了登录接口，其他所有的接口都得提供你的身份令牌
+    loadInfo () {
+      getUserInfo().then(res => {
+        this.user = res.data
+      })
+    },
+    onLogout () {
+      this.$confirm('确认退出吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        // 清除用户的登录状态
+        window.localStorage.removeItem('token')
+        // 跳转到登录页面
+        this.$router.push('/login')
+        this.$message({
+          type: 'success',
+          message: '退出成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消退出'
+        })
+      })
+    }
+  }
 }
 </script>
 
@@ -101,7 +136,7 @@ export default {
         }
     }
     .main {
-        background-color: #FAFAFA;
+        background-color: #fff;
     }
 }
 </style>
