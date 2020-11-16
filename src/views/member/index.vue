@@ -273,7 +273,7 @@ export default {
     },
     deleteMemberInfo (index, row) {
       console.log(index, row.member_id)
-      this.$confirm('是否删除此学生?', '提示', {
+      this.$confirm('是否删除此会员?', '提示', {
         cancelButtonText: '取消',
         confirmButtonText: '确定',
         type: 'warning',
@@ -292,7 +292,7 @@ export default {
       for (let i = 0; i < this.multipleSelection.length; i++) {
         arr.push(this.multipleSelection[i].member_id)
       }
-      this.$confirm('是否删除这些学生?', '提示', {
+      this.$confirm('是否删除这些会员?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',

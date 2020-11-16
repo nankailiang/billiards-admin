@@ -7,6 +7,8 @@ import Login from '@/views/login'
 import Home from '@/views/home'
 import Layout from '@/views/layout'
 import Member from '@/views/member'
+import Recharge from '@/views/recharge'
+import Consume from '@/views/consume'
 
 Vue.use(VueRouter)
 
@@ -31,6 +33,16 @@ const routes = [
         path: 'member',
         name: 'member',
         component: Member
+      },
+      {
+        path: 'recharge',
+        name: 'recharge',
+        component: Recharge
+      },
+      {
+        path: 'consume',
+        name: 'consume',
+        component: Consume
       }
     ]
   }
