@@ -24,11 +24,11 @@ request.interceptors.request.use(
 )
 
 // 响应拦截器
-// request.interceptors.response.use(function (response) {
-//   return response
-// }, function (error) {
-//   return Promise.reject(error)
-// })
+request.interceptors.response.use(function (response) {
+  return response
+}, function (error) {
+  return Promise.reject(error)
+})
 
 // 导出请求方法
 export default request

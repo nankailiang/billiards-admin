@@ -15,7 +15,7 @@ export const login = data => {
 // 获取用户信息
 export const getUserInfo = () => {
   return request({
-    method: 'GET',
+    method: 'POST',
     url: '/info'
   })
 }
