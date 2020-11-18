@@ -30,7 +30,7 @@ export const deleteMember = (data) => {
   })
 }
 
-// 删除会员
+// 批量删除会员
 export const batchDeleteMember = (data) => {
   return request({
     method: 'POST',

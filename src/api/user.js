@@ -19,3 +19,47 @@ export const getUserInfo = () => {
     url: '/info'
   })
 }
+
+// 获取全部用户信息
+export const getUser = () => {
+  return request({
+    method: 'POST',
+    url: '/user'
+  })
+}
+
+// 添加用户信息
+export const addUser = data => {
+  return request({
+    method: 'POST',
+    url: '/addUser',
+    data
+  })
+}
+
+// 删除用户
+export const deleteUser = data => {
+  return request({
+    method: 'POST',
+    url: '/deleteUser',
+    data
+  })
+}
+
+// 批量删除用户
+export const batchDeleteUser = data => {
+  return request({
+    method: 'POST',
+    url: '/batchDeleteUser',
+    data
+  })
+}
+
+// 编辑用户信息
+export const editUser = data => {
+  return request({
+    method: 'POST',
+    url: '/editUser',
+    data
+  })
+}

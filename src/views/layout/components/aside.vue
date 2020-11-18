@@ -19,9 +19,9 @@
     </el-menu-item>
     <el-menu-item index="/user">
       <i class="iconfont icon-gerenzhongxin"></i>
-      <span slot="title">角色管理</span>
+      <span slot="title">用户管理</span>
     </el-menu-item>
-    <el-menu-item index="/role">
+    <el-menu-item index="/power">
       <i class="iconfont icon-key"></i>
       <span slot="title">权限管理</span>
     </el-menu-item>

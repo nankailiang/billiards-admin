@@ -6,6 +6,9 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 
+// 加载echarts
+import echarts from 'echarts'
+
 // 加载element组件库
 import ElementUI from 'element-ui'
 
@@ -17,6 +20,9 @@ import './styles/index.scss'
 
 // 全局注册element组件库
 Vue.use(ElementUI)
+
+// 将echarts对象挂载到Vue的原型对象上
+Vue.prototype.$echarts = echarts
 
 Vue.config.productionTip = false
 

@@ -1,15 +1,15 @@
 <template>
-    <div class="member-container">
+    <div class="user-container">
         <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ path: '/' }">球桌管理</el-breadcrumb-item>
-            <el-breadcrumb-item>会员管理</el-breadcrumb-item>
+            <el-breadcrumb-item>用户管理</el-breadcrumb-item>
         </el-breadcrumb>
         <div class="demo-input-prefix">
             <el-input
                 class="input"
-                placeholder="按会员号查询"
+                placeholder="按用户ID查询"
                 prefix-icon="el-icon-user-solid"
-                v-model="memberId"
+                v-model="userId"
                 clearable>
             </el-input>
             <el-button type="primary" icon="el-icon-search" @click="idSearch">搜索</el-button>
@@ -23,16 +23,16 @@
             <el-button type="primary" icon="el-icon-search" @click="phoneSearch">搜索</el-button>
             <el-input
                 class="input"
-                placeholder="按姓名查询"
+                placeholder="按用户名查询"
                 prefix-icon="el-icon-user"
-                v-model="memberName"
+                v-model="userName"
                 clearable>
             </el-input>
             <el-button type="primary" icon="el-icon-search" @click="nameSearch">搜索</el-button>
-            <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addMemberForm = true">添加会员</el-button>
+            <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addUserForm = true">添加用户</el-button>
         </div>
         <el-table
-            :data="memberData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+            :data="userData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
             border
             style="width: 100%"
             @selection-change="handleSelectionChange"
@@ -42,39 +42,33 @@
             width="40"
             />
             <el-table-column
-            prop="member_id"
-            label="卡号"
+            prop="user_id"
+            label="用户ID"
             width="80">
             </el-table-column>
             <el-table-column
-            prop="member_name"
-            label="姓名"
+            prop="user_name"
+            label="用户名"
             width="130">
             </el-table-column>
             <el-table-column
-            prop="phone"
-            label="电话"
+            prop="user_password"
+            label="密码"
             width="160">
             </el-table-column>
             <el-table-column
-            prop="balance"
-            label="余额"
+            prop="user_phone"
+            label="电话"
             width="110">
             </el-table-column>
             <el-table-column
-            prop="create_time"
-            label="办理时间"
-            width="240">
+            prop="user_call"
+            label="昵称"
+            width="140">
             </el-table-column>
             <el-table-column
             label="操作">
               <template slot-scope="scope">
-                <el-button
-                  type="success"
-                  size="mini"
-                  icon="el-icon-edit"
-                  @click="recharge(scope.$index, scope.row)"
-                >充值</el-button>
                 <el-button
                   type="warning"
                   size="mini"
@@ -85,7 +79,7 @@
                   type="danger"
                   size="mini"
                   icon="el-icon-delete"
-                  @click="deleteMemberInfo(scope.$index, scope.row)"
+                  @click="deleteUserInfo(scope.$index, scope.row)"
                 >删除</el-button>
               </template>
             </el-table-column>
@@ -103,118 +97,100 @@
             :total="total">
             </el-pagination>
         </div>
-        <el-dialog title="添加会员"
-          :visible.sync="addMemberForm"
+        <el-dialog title="添加用户"
+          :visible.sync="addUserForm"
           :append-to-body="true"
           width="30%"
           center
         >
-          <el-form :model="form">
-            <el-form-item label="会员卡号" :label-width="formLabelWidth">
-              <el-input v-model="form.member_id"></el-input>
+          <el-form :model="addForm">
+            <el-form-item label="用户名" :label-width="formLabelWidth">
+              <el-input v-model="addForm.user_name"></el-input>
             </el-form-item>
-            <el-form-item label="会员名称" :label-width="formLabelWidth">
-              <el-input v-model="form.member_name"></el-input>
+            <el-form-item label="密码" :label-width="formLabelWidth">
+              <el-input v-model="addForm.user_password"></el-input>
             </el-form-item>
-            <el-form-item label="电话号码" :label-width="formLabelWidth">
-              <el-input v-model="form.phone"></el-input>
+            <el-form-item label="电话" :label-width="formLabelWidth">
+              <el-input v-model="addForm.user_phone"></el-input>
             </el-form-item>
-            <el-form-item label="会员余额" :label-width="formLabelWidth">
-              <el-input v-model="form.balance"></el-input>
+            <el-form-item label="昵称" :label-width="formLabelWidth">
+              <el-input v-model="addForm.user_call"></el-input>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="addMemberInfo">确 定</el-button>
-            <el-button @click="addMemberForm = false">取 消</el-button>
+            <el-button type="primary" @click="addUserInfo">确 定</el-button>
+            <el-button @click="addUserForm = false">取 消</el-button>
           </div>
         </el-dialog>
-        <el-dialog title="会员信息编辑"
-          :visible.sync="editMemberForm"
+        <el-dialog title="用户信息编辑"
+          :visible.sync="editUserForm"
           :append-to-body="true"
           width="30%"
           center
         >
           <el-form :model="editForm">
-            <el-form-item label="会员卡号" :label-width="formLabelWidth">
-              <el-input v-model="editForm.member_id" :disabled="true"></el-input>
+            <el-form-item label="用户ID" :label-width="formLabelWidth">
+              <el-input v-model="editForm.user_id" :disabled="true"></el-input>
             </el-form-item>
-            <el-form-item label="会员名称" :label-width="formLabelWidth">
-              <el-input v-model="editForm.member_name"></el-input>
+            <el-form-item label="用户名" :label-width="formLabelWidth">
+              <el-input v-model="editForm.user_name"></el-input>
             </el-form-item>
-            <el-form-item label="电话号码" :label-width="formLabelWidth">
-              <el-input v-model="editForm.phone"></el-input>
+            <el-form-item label="密码" :label-width="formLabelWidth">
+              <el-input v-model="editForm.user_password"></el-input>
             </el-form-item>
-          </el-form>
-          <div slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="editMemberInfo">确 定</el-button>
-            <el-button @click="editMemberForm = false">取 消</el-button>
-          </div>
-        </el-dialog>
-        <el-dialog title="充值"
-          :visible.sync="rechargeMemberForm"
-          :append-to-body="true"
-          width="30%"
-          center
-        >
-          <el-form :model="rechargeForm">
-            <el-form-item label="会员卡号" :label-width="formLabelWidth">
-              <el-input v-model="rechargeForm.member_id" :disabled="true"></el-input>
+            <el-form-item label="电话" :label-width="formLabelWidth">
+              <el-input v-model="editForm.user_phone"></el-input>
             </el-form-item>
-            <el-form-item label="充值金额" :label-width="formLabelWidth">
-              <el-input v-model="rechargeForm.recharge"></el-input>
+            <el-form-item label="昵称" :label-width="formLabelWidth">
+              <el-input v-model="editForm.user_call"></el-input>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="memberRechargeInfo">确 定</el-button>
-            <el-button @click="rechargeMemberForm = false">取 消</el-button>
+            <el-button type="primary" @click="editUserInfo">确 定</el-button>
+            <el-button @click="editUserForm = false">取 消</el-button>
           </div>
         </el-dialog>
     </div>
 </template>
 
 <script>
-import { getMember, addMember, deleteMember, editMember, memberRecharge, batchDeleteMember } from '@/api/member'
-import { setRecharge } from '@/api/recharge'
+import { getUser, addUser, deleteUser, editUser, batchDeleteUser } from '@/api/user'
 export default {
-  name: 'MemberIndex',
+  name: 'UserIndex',
   components: {},
   props: {},
   data () {
     return {
-      memberId: '',
-      memberName: '',
+      userId: '',
+      userName: '',
       phone: '',
-      form: {
-        member_id: '',
-        member_name: '',
-        phone: '',
-        balance: ''
-      },
-      editForm: {
-        member_id: '',
-        member_name: '',
-        phone: '',
-        balance: ''
-      },
-      rechargeForm: {
-        member_id: '',
-        balance: '',
-        recharge: ''
-      },
-      addMemberForm: false,
-      editMemberForm: false,
-      rechargeMemberForm: false,
-      formLabelWidth: '80px',
-      memberData: [
+      userData: [
         {
-          member_id: '001',
-          member_name: '王小虎',
-          phone: '12345678910',
-          balance: '100',
-          create_time: '2020-08-26 09:19:34'
+          user_id: 1,
+          user_name: 'admin',
+          user_password: 'admin',
+          user_phone: '12345678910',
+          user_call: 'boss',
+          user_state: 1
         }
       ],
-      total: 100,
+      addUserForm: false,
+      editUserForm: false,
+      formLabelWidth: '80px',
+      addForm: {
+        user_name: '',
+        user_password: '',
+        user_phone: '',
+        user_call: ''
+      },
+      editForm: {
+        user_id: '',
+        user_name: '',
+        user_password: '',
+        user_phone: '',
+        user_call: ''
+      },
+      total: 20,
       currentPage: 1,
       pagesize: 5,
       multipleSelection: []
@@ -223,19 +199,19 @@ export default {
   computed: {},
   watch: {},
   created () {
-    this.loadMember()
+    this.loadUser()
   },
   mounted () {},
   methods: {
-    loadMember () {
-      getMember().then(res => {
-        this.memberData = res.data.data
-        this.total = this.memberData.length
+    loadUser () {
+      getUser().then(res => {
+        this.userData = res.data.data
+        this.total = this.userData.length
       })
     },
-    addMemberInfo () {
-      addMember(this.form)
-      this.addMemberForm = false
+    addUserInfo () {
+      addUser(this.addForm)
+      this.addUserForm = false
       this.$message({
         message: '添加会员成功！',
         type: 'success'
@@ -243,43 +219,27 @@ export default {
     },
     edit (index, row) {
       this.editForm = Object.assign({}, row)
-      this.editMemberForm = true
+      this.editUserForm = true
     },
-    editMemberInfo () {
+    editUserInfo () {
       const data = this.editForm
-      editMember(data).then((response) => {
+      editUser(data).then((response) => {
         if (response.data.code === 201) {
-          this.editMemberForm = false
+          this.editUserForm = false
         } else {
           this.$message.error(response.data.msg)
         }
       })
     },
-    recharge (index, row) {
-      this.rechargeForm.member_id = row.member_id
-      this.rechargeForm.balance = row.balance
-      this.rechargeMemberForm = true
-    },
-    memberRechargeInfo () {
-      const data = this.rechargeForm
-      memberRecharge(data).then((response) => {
-        if (response.data.code === 201) {
-          this.rechargeMemberForm = false
-        } else {
-          this.$message.error(response.data.msg)
-        }
-      })
-      setRecharge(data)
-    },
-    deleteMemberInfo (index, row) {
-      console.log(index, row.member_id)
+    deleteUserInfo (index, row) {
+      console.log(index, row.user_id)
       this.$confirm('是否删除此会员?', '提示', {
         cancelButtonText: '取消',
         confirmButtonText: '确定',
         type: 'warning',
         center: true
       }).then(() => {
-        deleteMember({ member_id: row.member_id })
+        deleteUser({ user_id: row.user_id })
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -290,7 +250,7 @@ export default {
     batchDelete (multipleSelection) {
       const arr = []
       for (let i = 0; i < this.multipleSelection.length; i++) {
-        arr.push(this.multipleSelection[i].member_id)
+        arr.push(this.multipleSelection[i].user_id)
       }
       this.$confirm('是否删除这些会员?', '提示', {
         confirmButtonText: '确定',
@@ -298,7 +258,7 @@ export default {
         type: 'warning',
         center: true
       }).then(() => {
-        batchDeleteMember(arr).then((response) => {
+        batchDeleteUser(arr).then((response) => {
           if (response.data.code === 201) {
             this.$message({
               type: 'success',
@@ -319,34 +279,34 @@ export default {
       })
     },
     idSearch () {
-      const keywords = this.memberId
-      const newMemberDate = []
-      this.memberData.forEach(item => {
-        if (item.member_id.toString().indexOf(keywords) !== -1) {
-          newMemberDate.push(item)
+      const keywords = this.userId
+      const newUserDate = []
+      this.userData.forEach(item => {
+        if (item.user_id.toString().indexOf(keywords) !== -1) {
+          newUserDate.push(item)
         }
       })
-      this.memberData = newMemberDate
+      this.userData = newUserDate
     },
     phoneSearch () {
       const keywords = this.phone
-      const newMemberDate = []
-      this.memberData.forEach(item => {
+      const newUserDate = []
+      this.userData.forEach(item => {
         if (item.phone.indexOf(keywords) !== -1) {
-          newMemberDate.push(item)
+          newUserDate.push(item)
         }
       })
-      this.memberData = newMemberDate
+      this.userData = newUserDate
     },
     nameSearch () {
-      const keywords = this.memberName
-      const newMemberDate = []
-      this.memberData.forEach(item => {
-        if (item.member_name.indexOf(keywords) !== -1) {
-          newMemberDate.push(item)
+      const keywords = this.userName
+      const newUserDate = []
+      this.userData.forEach(item => {
+        if (item.user_name.indexOf(keywords) !== -1) {
+          newUserDate.push(item)
         }
       })
-      this.memberData = newMemberDate
+      this.userData = newUserDate
     },
     handleSizeChange (val) {
       this.pagesize = val
@@ -362,7 +322,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.member-container {
+.user-container {
     .demo-input-prefix {
         margin: 20px 0;
         .input {
