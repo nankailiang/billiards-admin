@@ -63,3 +63,12 @@ export const editUser = data => {
     data
   })
 }
+
+// 改变用户状态
+export const changeState = data => {
+  return request({
+    method: 'POST',
+    url: '/changeState',
+    data
+  })
+}

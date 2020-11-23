@@ -12,7 +12,7 @@
                 v-model="memberId"
                 clearable>
             </el-input>
-            <el-button type="primary" icon="el-icon-search" @click="idSearch">搜索</el-button>
+            <el-button slot="append" icon="el-icon-search" @click="idSearch" />
             <el-input
                 class="input"
                 placeholder="按手机号查询"
@@ -20,7 +20,7 @@
                 v-model="phone"
                 clearable>
             </el-input>
-            <el-button type="primary" icon="el-icon-search" @click="phoneSearch">搜索</el-button>
+            <el-button slot="append" icon="el-icon-search" @click="phoneSearch" />
             <el-input
                 class="input"
                 placeholder="按姓名查询"
@@ -28,8 +28,8 @@
                 v-model="memberName"
                 clearable>
             </el-input>
-            <el-button type="primary" icon="el-icon-search" @click="nameSearch">搜索</el-button>
-            <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addMemberForm = true">添加会员</el-button>
+            <el-button slot="append" icon="el-icon-search" @click="nameSearch" />
+            <el-button type="primary" plain icon="el-icon-circle-plus-outline" @click="addMemberForm = true">添加会员</el-button>
         </div>
         <el-table
             :data="memberData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
@@ -366,10 +366,9 @@ export default {
     .demo-input-prefix {
         margin: 20px 0;
         .input {
-            width: 200px;
+          width: 200px;
         }
         button {
-          margin-left: 1px;
           margin-right: 12px;
         }
     }

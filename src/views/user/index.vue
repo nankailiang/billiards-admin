@@ -10,7 +10,8 @@
                 placeholder="按用户ID查询"
                 prefix-icon="el-icon-user-solid"
                 v-model="userId"
-                clearable>
+                clearable
+                @clear="loadUser">
             </el-input>
             <el-button type="primary" icon="el-icon-search" @click="idSearch">搜索</el-button>
             <el-input
@@ -65,6 +66,19 @@
             prop="user_call"
             label="昵称"
             width="140">
+            </el-table-column>
+            <el-table-column
+            prop="user_state"
+            label="用户状态"
+            width="140">
+              <template slot-scope="scope">
+                <el-switch
+                v-model="scope.row.user_state"
+                @change="changeUserState(scope.row)"
+                active-color="#13ce66"
+                inactive-color="#ff4949">
+                </el-switch>
+              </template>
             </el-table-column>
             <el-table-column
             label="操作">
@@ -154,7 +168,7 @@
 </template>
 
 <script>
-import { getUser, addUser, deleteUser, editUser, batchDeleteUser } from '@/api/user'
+import { getUser, addUser, deleteUser, editUser, batchDeleteUser, changeState } from '@/api/user'
 export default {
   name: 'UserIndex',
   components: {},
@@ -171,7 +185,7 @@ export default {
           user_password: 'admin',
           user_phone: '12345678910',
           user_call: 'boss',
-          user_state: 1
+          user_state: true
         }
       ],
       addUserForm: false,
@@ -207,6 +221,10 @@ export default {
       getUser().then(res => {
         this.userData = res.data.data
         this.total = this.userData.length
+        for (let i = 0; i < this.total; i++) {
+          this.userData[i].user_state = !!this.userData[i].user_state
+        }
+        console.log(this.userData)
       })
     },
     addUserInfo () {
@@ -216,6 +234,9 @@ export default {
         message: '添加会员成功！',
         type: 'success'
       })
+    },
+    changeUserState (user) {
+      changeState(user)
     },
     edit (index, row) {
       this.editForm = Object.assign({}, row)
@@ -292,7 +313,7 @@ export default {
       const keywords = this.phone
       const newUserDate = []
       this.userData.forEach(item => {
-        if (item.phone.indexOf(keywords) !== -1) {
+        if (item.user_phone.indexOf(keywords) !== -1) {
           newUserDate.push(item)
         }
       })
