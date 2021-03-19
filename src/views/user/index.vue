@@ -228,29 +228,46 @@ export default {
       })
     },
     addUserInfo () {
-      addUser(this.addForm)
-      this.addUserForm = false
-      this.$message({
-        message: '添加会员成功！',
-        type: 'success'
+      addUser(this.addForm).then((response) => {
+        this.loadUser()
+        if (response.data.code === 201) {
+          this.$message({
+            type: 'success',
+            message: response.data.msg
+          })
+        } else {
+          this.$message({
+            type: 'error',
+            message: response.data.msg
+          })
+        }
       })
+      this.addUserForm = false
     },
     changeUserState (user) {
       changeState(user)
     },
     edit (index, row) {
-      this.editForm = Object.assign({}, row)
       this.editUserForm = true
+      this.editForm = Object.assign({}, row)
     },
     editUserInfo () {
       const data = this.editForm
       editUser(data).then((response) => {
+        this.loadUser()
         if (response.data.code === 201) {
-          this.editUserForm = false
+          this.$message({
+            type: 'success',
+            message: response.data.msg
+          })
         } else {
-          this.$message.error(response.data.msg)
+          this.$message({
+            type: 'error',
+            message: response.data.msg
+          })
         }
       })
+      this.editUserForm = false
     },
     deleteUserInfo (index, row) {
       console.log(index, row.user_id)
@@ -260,7 +277,20 @@ export default {
         type: 'warning',
         center: true
       }).then(() => {
-        deleteUser({ user_id: row.user_id })
+        deleteUser({ user_id: row.user_id }).then((response) => {
+          this.loadUser()
+          if (response.data.code === 201) {
+            this.$message({
+              type: 'success',
+              message: response.data.msg
+            })
+          } else {
+            this.$message({
+              type: 'error',
+              message: response.data.msg
+            })
+          }
+        })
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -280,6 +310,7 @@ export default {
         center: true
       }).then(() => {
         batchDeleteUser(arr).then((response) => {
+          this.loadUser()
           if (response.data.code === 201) {
             this.$message({
               type: 'success',

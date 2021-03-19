@@ -140,7 +140,20 @@ export default {
         type: 'warning',
         center: true
       }).then(() => {
-        deleteConsume({ consume_id: row.consume_id })
+        deleteConsume({ consume_id: row.consume_id }).then((response) => {
+          this.loadConsume()
+          if (response.data.code === 201) {
+            this.$message({
+              type: 'success',
+              message: response.data.msg
+            })
+          } else {
+            this.$message({
+              type: 'error',
+              message: response.data.msg
+            })
+          }
+        })
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -160,6 +173,7 @@ export default {
         center: true
       }).then(() => {
         batchDeleteConsume(arr).then((response) => {
+          this.loadConsume()
           if (response.data.code === 201) {
             this.$message({
               type: 'success',

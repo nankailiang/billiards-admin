@@ -38,7 +38,6 @@
                         <el-dropdown-item
                             @click.native="onLogout"
                         >退出</el-dropdown-item>
-                        <el-dropdown-item>保留</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
             </el-header>

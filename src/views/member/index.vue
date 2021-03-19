@@ -234,12 +234,21 @@ export default {
       })
     },
     addMemberInfo () {
-      addMember(this.form)
-      this.addMemberForm = false
-      this.$message({
-        message: '添加会员成功！',
-        type: 'success'
+      addMember(this.form).then((response) => {
+        this.loadMember()
+        if (response.data.code === 201) {
+          this.$message({
+            type: 'success',
+            message: response.data.msg
+          })
+        } else {
+          this.$message({
+            type: 'error',
+            message: response.data.msg
+          })
+        }
       })
+      this.addMemberForm = false
     },
     edit (index, row) {
       this.editForm = Object.assign({}, row)
@@ -248,6 +257,7 @@ export default {
     editMemberInfo () {
       const data = this.editForm
       editMember(data).then((response) => {
+        this.loadMember()
         if (response.data.code === 201) {
           this.editMemberForm = false
         } else {
@@ -263,6 +273,7 @@ export default {
     memberRechargeInfo () {
       const data = this.rechargeForm
       memberRecharge(data).then((response) => {
+        this.loadMember()
         if (response.data.code === 201) {
           this.rechargeMemberForm = false
         } else {
@@ -279,7 +290,20 @@ export default {
         type: 'warning',
         center: true
       }).then(() => {
-        deleteMember({ member_id: row.member_id })
+        deleteMember({ member_id: row.member_id }).then((response) => {
+          this.loadMember()
+          if (response.data.code === 201) {
+            this.$message({
+              type: 'success',
+              message: response.data.msg
+            })
+          } else {
+            this.$message({
+              type: 'error',
+              message: response.data.msg
+            })
+          }
+        })
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -299,6 +323,7 @@ export default {
         center: true
       }).then(() => {
         batchDeleteMember(arr).then((response) => {
+          this.loadMember()
           if (response.data.code === 201) {
             this.$message({
               type: 'success',

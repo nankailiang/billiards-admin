@@ -3,7 +3,7 @@
  */
 import request from '@/utils/request'
 
-// 获取球桌分区信息
+// 获取球桌分区以及球桌信息
 export const getZone = () => {
   return request({
     method: 'POST',

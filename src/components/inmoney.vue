@@ -49,7 +49,7 @@ export default {
         },
         yAxis: {
           type: 'value',
-          name: '总时长'
+          name: '充值总和'
         },
         series: [
           {

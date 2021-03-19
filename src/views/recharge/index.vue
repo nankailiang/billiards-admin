@@ -116,7 +116,20 @@ export default {
         type: 'warning',
         center: true
       }).then(() => {
-        deleteRecharge({ recharge_id: row.recharge_id })
+        deleteRecharge({ recharge_id: row.recharge_id }).then((response) => {
+          this.loadRecharge()
+          if (response.data.code === 201) {
+            this.$message({
+              type: 'success',
+              message: response.data.msg
+            })
+          } else {
+            this.$message({
+              type: 'error',
+              message: response.data.msg
+            })
+          }
+        })
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -136,6 +149,7 @@ export default {
         center: true
       }).then(() => {
         batchDeleteRecharge(arr).then((response) => {
+          this.loadRecharge()
           if (response.data.code === 201) {
             this.$message({
               type: 'success',

@@ -1,23 +1,25 @@
 <template>
     <div class="home-container">
-      <span class="title">第{{zoneInfo[0].zone_id}}分区({{zoneInfo[0].zone_name}})，价格每小时：{{zoneInfo[0].zone_money}}元</span>
-      <div class="partition">
-        <div class="poll-table" v-for="(item,index) in tableInfo" :key="index">
-          <div class="first">{{ item.table_id }}号台<img src="./delete.png" alt="删除" @click="deleteTable(index)"></div>
-          <div>开始时间：</div>
-          <div v-if="item.state == 0">00:00:00</div>
-          <div v-if="item.state == 1">{{ item.start_time }}</div>
-          <div>持续时间：</div>
-          <div v-if="item.state == 0">00:00:00</div>
-          <div v-if="item.state == 1">{{ Math.ceil((new Date() - new Date(item.start_time))/60000) }}分钟</div>
-          <div>球桌状态：</div>
-          <div v-if="item.state == 0">空闲</div>
-          <div v-if="item.state == 1">有人</div>
-          <el-button type="success" size="mini" round @click="start(index)" v-show="!item.state">开始</el-button>
-          <el-button type="danger" size="mini" round @click="getMemberId(index)" v-show="item.state">停止</el-button>
-        </div>
-        <div class="poll-table">
-          <img class="addTable" src="./add.png" alt="添加" @click="addTable()">
+      <div class="box" v-for="(items,indexs) in zoneInfo" :key="indexs">
+        <span class="title">第{{items.zone_id}}分区({{items.zone_name}})，价格每小时：{{items.zone_money}}元</span>
+        <div class="partition">
+          <div class="poll-table" v-for="(item,index) in items.tableInfo" :key="index">
+            <div class="first">{{ item.table_id }}号台<img src="./delete.png" alt="删除" @click="deleteTableInfo(item.table_id)"></div>
+            <div>开始时间：</div>
+            <div v-if="item.state == 0">00:00:00</div>
+            <div v-if="item.state == 1">{{ item.start_time }}</div>
+            <div>持续时间：</div>
+            <div v-if="item.state == 0">00:00:00</div>
+            <div v-if="item.state == 1">{{ Math.ceil((new Date() - new Date(item.start_time))/60000) }}分钟</div>
+            <div>球桌状态：</div>
+            <div v-if="item.state == 0">空闲</div>
+            <div v-if="item.state == 1">有人</div>
+            <el-button type="success" size="mini" round @click="start(item.table_id)" v-show="!item.state">开始</el-button>
+            <el-button type="danger" size="mini" round @click="getMemberId(item,items)" v-show="item.state">停止</el-button>
+          </div>
+          <div class="poll-table">
+            <img class="addTable" src="./add.png" alt="添加" @click="addTableInfo(items.zone_id)">
+          </div>
         </div>
       </div>
       <el-dialog title="请输入会员卡号,没有直接确认即可"
@@ -26,9 +28,9 @@
         width="30%"
         center
       >
-        <el-form :model="memberId">
+        <el-form :model="tableInfo">
           <el-form-item label="会员卡号">
-            <el-input v-model="memberId.id"></el-input>
+            <el-input v-model="tableInfo.member_id"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -40,35 +42,32 @@
 </template>
 
 <script>
-import { getTable, startTime, stopTime } from '@/api/table'
+import { getTable, deleteTable, addTable, startTime, stopTime } from '@/api/table'
 import { getZone } from '@/api/zone'
 import { setConsume } from '@/api/consume'
 import { memberConsume } from '@/api/member'
-import moment from 'dayjs'
+// import moment from 'dayjs'
 export default {
   name: 'HomeIndex',
   components: {},
   props: {},
   data () {
     return {
-      tableInfo: [
-        {
-          zone_id: '1',
-          table_id: '1',
-          start_time: '00:00:00',
-          state: '0'
-        }
-      ],
-      currentIndex: '',
       zoneInfo: [
         {
           zone_id: '1',
           zone_money: 10,
-          zone_name: '休闲区'
+          zone_name: '休闲区',
+          tableInfo: []
         }
       ],
-      memberId: {
-        id: ''
+      tableInfo: {
+        zone_id: 0,
+        table_id: 0,
+        member_id: 0,
+        start_time: '',
+        zone_money: 0,
+        state: 0
       },
       memberIdFrom: false
     }
@@ -76,64 +75,107 @@ export default {
   computed: {},
   watch: {},
   created () {
-    this.loadTable()
     this.loadZone()
+    this.loadTable()
   },
   mounted () {},
   destroyed () {},
   methods: {
+    loadZone () {
+      getZone()
+    },
     loadTable () {
       getTable().then((res) => {
-        this.tableInfo = res.data.data
-      })
-    },
-    loadZone () {
-      getZone().then((res) => {
         this.zoneInfo = res.data.data
+        console.log(this.zoneInfo, '000')
       })
     },
-    start (index) {
-      const { table_id: tableId } = this.tableInfo[index]
+    start (tableId) {
       startTime({ table_id: tableId, state: 1 }).then(() => {
-        const table = {
-          ...this.tableInfo[index],
-          state: 1,
-          start_time: moment().format('YYYY-MM-DD HH:mm:ss')
-        }
-        this.tableInfo = this.tableInfo.slice(0, index)
-          .concat(table)
-          .concat(this.tableInfo.slice(index + 1))
+        this.loadZone()
+        this.loadTable()
       }
       )
     },
-    getMemberId (index) {
-      this.currentIndex = index
-      this.memberIdFrom = true
+    getMemberId (item, items) {
+      this.tableInfo.zone_id = items.zone_id
+      this.tableInfo.table_id = item.table_id
+      this.tableInfo.start_time = item.start_time
+      this.tableInfo.zone_money = items.zone_money
+      this.tableInfo.state = item.state
+      this.memberIdFrom = !this.memberIdFrom
     },
     stop () {
-      this.tableInfo[this.currentIndex].state = !this.tableInfo[this.currentIndex].state
-      if (this.memberId.id === '') {
-        this.memberId.id = 0
+      // this.tableInfo[this.currentIndex].state = !this.tableInfo[this.currentIndex].state
+      console.log(this.tableInfo, '000')
+      const tableInfo = {
+        member_id: this.tableInfo.member_id,
+        start_time: this.tableInfo.start_time,
+        table_id: this.tableInfo.table_id,
+        zone_id: this.tableInfo.zone_id,
+        state: !this.tableInfo.state,
+        keep_time: Math.ceil((new Date() - new Date(this.tableInfo.start_time)) / 60000),
+        consume_money: Math.ceil(((new Date() - new Date(this.tableInfo.start_time)) / 60000) / 60) * this.tableInfo.zone_money
       }
-      this.tableInfo[this.currentIndex].member_id = this.memberId.id
-      this.tableInfo[this.currentIndex].keep_time = Math.ceil((new Date() - new Date(this.tableInfo[this.currentIndex].start_time)) / 60000)
-      this.tableInfo[this.currentIndex].consume_money = Math.ceil(this.tableInfo[this.currentIndex].keep_time / 60) * this.zoneInfo[0].zone_money
+      console.log(this.startTime, 'time')
+      console.log(tableInfo, '123123')
       this.$notify({
         title: '消费结算',
-        message: '您的消费金额为：' + this.tableInfo[this.currentIndex].consume_money,
+        message: '您的消费金额为：' + tableInfo.consume_money,
         duration: 0,
         type: 'success'
       })
-      setConsume(this.tableInfo[this.currentIndex])
-      memberConsume(this.tableInfo[this.currentIndex])
-      stopTime(this.tableInfo[this.currentIndex])
+      setConsume(tableInfo)
+      memberConsume(tableInfo)
+      stopTime(tableInfo).then(() => {
+        this.loadZone()
+        this.loadTable()
+      })
       this.memberIdFrom = false
     },
-    deleteTable (index) {
-      alert('这是：' + index)
+    deleteTableInfo (tableId) {
+      this.$confirm('是否删除此球桌?', '提示', {
+        cancelButtonText: '取消',
+        confirmButtonText: '确定',
+        type: 'warning',
+        center: true
+      }).then(() => {
+        deleteTable({ table_id: tableId }).then(() => {
+          this.loadTable()
+          this.$message({
+            showClose: true,
+            message: '删除成功！',
+            type: 'success'
+          })
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     },
-    addTable () {
-      alert('添加一个球桌')
+    addTableInfo (zoneId) {
+      this.$confirm('是否添加一个球桌?', '提示', {
+        cancelButtonText: '取消',
+        confirmButtonText: '确定',
+        type: 'success',
+        center: true
+      }).then(() => {
+        addTable({ zone_id: zoneId }).then(() => {
+          this.loadTable()
+          this.$message({
+            showClose: true,
+            message: '添加成功！',
+            type: 'success'
+          })
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     }
   }
 }
@@ -177,6 +219,7 @@ export default {
           width: 18px;
           height: 18px;
           margin-left: 35px;
+          cursor: pointer;
         }
       }
       .addTable {

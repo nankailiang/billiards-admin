@@ -44,7 +44,7 @@ export default {
         color: ['#304156'],
         xAxis: {
           type: 'category',
-          name: '编号',
+          name: '球桌号',
           data: tableId
         },
         yAxis: {

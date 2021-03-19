@@ -39,7 +39,7 @@ export default {
       })
       const option = {
         title: {
-          text: '近半年每个月销售额'
+          text: '近半年每个月营业额'
         },
         color: ['#304156'],
         xAxis: {
