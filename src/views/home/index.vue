@@ -3,7 +3,7 @@
       <span class="title">第{{zoneInfo[0].zone_id}}分区({{zoneInfo[0].zone_name}})，价格每小时：{{zoneInfo[0].zone_money}}元</span>
       <div class="partition">
         <div class="poll-table" v-for="(item,index) in tableInfo" :key="index">
-          <div>{{ item.table_id }}号台</div>
+          <div class="first">{{ item.table_id }}号台<img src="./delete.png" alt="删除" @click="deleteTable(index)"></div>
           <div>开始时间：</div>
           <div v-if="item.state == 0">00:00:00</div>
           <div v-if="item.state == 1">{{ item.start_time }}</div>
@@ -15,6 +15,9 @@
           <div v-if="item.state == 1">有人</div>
           <el-button type="success" size="mini" round @click="start(index)" v-show="!item.state">开始</el-button>
           <el-button type="danger" size="mini" round @click="getMemberId(index)" v-show="item.state">停止</el-button>
+        </div>
+        <div class="poll-table">
+          <img class="addTable" src="./add.png" alt="添加" @click="addTable()">
         </div>
       </div>
       <el-dialog title="请输入会员卡号,没有直接确认即可"
@@ -41,6 +44,7 @@ import { getTable, startTime, stopTime } from '@/api/table'
 import { getZone } from '@/api/zone'
 import { setConsume } from '@/api/consume'
 import { memberConsume } from '@/api/member'
+import moment from 'dayjs'
 export default {
   name: 'HomeIndex',
   components: {},
@@ -89,9 +93,18 @@ export default {
       })
     },
     start (index) {
-      this.tableInfo[index].state = !this.tableInfo[index].state
-      startTime(this.tableInfo[index])
-      location.reload()
+      const { table_id: tableId } = this.tableInfo[index]
+      startTime({ table_id: tableId, state: 1 }).then(() => {
+        const table = {
+          ...this.tableInfo[index],
+          state: 1,
+          start_time: moment().format('YYYY-MM-DD HH:mm:ss')
+        }
+        this.tableInfo = this.tableInfo.slice(0, index)
+          .concat(table)
+          .concat(this.tableInfo.slice(index + 1))
+      }
+      )
     },
     getMemberId (index) {
       this.currentIndex = index
@@ -115,6 +128,12 @@ export default {
       memberConsume(this.tableInfo[this.currentIndex])
       stopTime(this.tableInfo[this.currentIndex])
       this.memberIdFrom = false
+    },
+    deleteTable (index) {
+      alert('这是：' + index)
+    },
+    addTable () {
+      alert('添加一个球桌')
     }
   }
 }
@@ -151,6 +170,20 @@ export default {
       }
       button {
         margin-top: 10px;
+      }
+      .first {
+        margin-left: 45px;
+          img {
+          width: 18px;
+          height: 18px;
+          margin-left: 35px;
+        }
+      }
+      .addTable {
+        width: 100px;
+        height: 100px;
+        margin-top: 50px;
+        cursor: pointer;
       }
     }
   }

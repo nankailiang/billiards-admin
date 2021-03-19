@@ -77,6 +77,17 @@ export default {
     loadInfo () {
       getUserInfo().then(res => {
         this.user = res.data
+        console.log(this.user)
+        if (this.user.code === 507) {
+          // 清除用户的登录状态
+          window.localStorage.removeItem('token')
+          // 跳转到登录页面
+          this.$router.push('/login')
+          this.$message({
+            type: 'error',
+            message: '用户验证失败!'
+          })
+        }
       })
     },
     onLogout () {

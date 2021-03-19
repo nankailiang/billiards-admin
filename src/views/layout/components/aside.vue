@@ -21,7 +21,7 @@
       <i class="iconfont icon-gerenzhongxin"></i>
       <span slot="title">用户管理</span>
     </el-menu-item>
-    <el-menu-item index="/power">
+    <el-menu-item v-show="false" index="/power">
       <i class="iconfont icon-key"></i>
       <span slot="title">权限管理</span>
     </el-menu-item>

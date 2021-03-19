@@ -56,12 +56,12 @@
             </el-table-column>
             <el-table-column
             prop="table_id"
-            label="分区"
+            label="球桌"
             width="70">
             </el-table-column>
             <el-table-column
             prop="zone_id"
-            label="球桌"
+            label="分区"
             width="70">
             </el-table-column>
             <el-table-column

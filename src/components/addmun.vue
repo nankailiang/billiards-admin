@@ -64,7 +64,7 @@ export default {
         ],
         tooltip: {
           show: true,
-          formatter: '{b0}月份: <br />{c0}人'
+          formatter: '{b0}: <br />{c0}人'
         }
       }
       this.chartInstance.setOption(option)
