@@ -10,3 +10,30 @@ export const getZone = () => {
     url: '/zone'
   })
 }
+
+// 添加分区
+export const addZone = data => {
+  return request({
+    method: 'POST',
+    url: '/addZone',
+    data
+  })
+}
+
+// 删除分区
+export const deleteZone = data => {
+  return request({
+    method: 'POST',
+    url: '/deleteZone',
+    data
+  })
+}
+
+// 编辑分区信息
+export const editZone = data => {
+  return request({
+    method: 'POST',
+    url: '/editZone',
+    data
+  })
+}

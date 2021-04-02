@@ -13,7 +13,7 @@
                 clearable
                 @clear="loadUser">
             </el-input>
-            <el-button type="primary" icon="el-icon-search" @click="idSearch">搜索</el-button>
+            <el-button slot="append" icon="el-icon-search" @click="idSearch" />
             <el-input
                 class="input"
                 placeholder="按手机号查询"
@@ -21,7 +21,7 @@
                 v-model="phone"
                 clearable>
             </el-input>
-            <el-button type="primary" icon="el-icon-search" @click="phoneSearch">搜索</el-button>
+            <el-button slot="append" icon="el-icon-search" @click="phoneSearch" />
             <el-input
                 class="input"
                 placeholder="按用户名查询"
@@ -29,8 +29,8 @@
                 v-model="userName"
                 clearable>
             </el-input>
-            <el-button type="primary" icon="el-icon-search" @click="nameSearch">搜索</el-button>
-            <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addUserForm = true">添加用户</el-button>
+            <el-button slot="append" icon="el-icon-search" @click="nameSearch" />
+            <el-button type="primary" plain icon="el-icon-circle-plus-outline" @click="addUserForm = true">添加用户</el-button>
         </div>
         <el-table
             :data="userData.slice((currentPage-1)*pagesize,currentPage*pagesize)"

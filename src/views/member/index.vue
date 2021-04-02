@@ -394,6 +394,7 @@ export default {
           width: 200px;
         }
         button {
+          margin-left: 1px;
           margin-right: 12px;
         }
     }

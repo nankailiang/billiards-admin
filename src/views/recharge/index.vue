@@ -12,7 +12,7 @@
                 v-model="memberId"
                 clearable>
             </el-input>
-            <el-button type="primary" icon="el-icon-search" @click="idSearch">搜索</el-button>
+            <el-button slot="append" icon="el-icon-search" @click="idSearch" />
         </div>
         <el-table
             :data="rechargeData.slice((currentPage-1)*pagesize,currentPage*pagesize)"

@@ -13,6 +13,10 @@
       <i class="iconfont icon-taiqiu"></i>
       <span slot="title">球桌管理</span>
     </el-menu-item>
+    <el-menu-item index="/zone">
+      <i class="iconfont icon--fanweineiqianzhi"></i>
+      <span slot="title">分区管理</span>
+    </el-menu-item>
     <el-menu-item index="/member">
       <i class="iconfont icon-huiyuanguanli"></i>
       <span slot="title">会员管理</span>

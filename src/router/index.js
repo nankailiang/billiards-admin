@@ -5,6 +5,7 @@ import VueRouter from 'vue-router'
 // 他是 src 目录的别名
 import Login from '@/views/login'
 import Home from '@/views/home'
+import Zone from '@/views/zone'
 import Layout from '@/views/layout'
 import Member from '@/views/member'
 import Recharge from '@/views/recharge'
@@ -30,6 +31,11 @@ const routes = [
         path: '',
         name: 'home',
         component: Home
+      },
+      {
+        path: 'zone',
+        name: 'zone',
+        component: Zone
       },
       {
         path: 'member',

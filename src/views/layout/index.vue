@@ -26,20 +26,50 @@
                 <el-dropdown>
                     <div class="avatar-wrap">
                         <img class="avatar" src="./avatar.jpg">
-                        <span>{{ user.call }}</span>
+                        <span>{{ user.user_call }}</span>
                         <i class="el-icon-arrow-down el-icon--right"></i>
                     </div>
                     <!-- <span class="el-dropdown-link">
                         下拉菜单<i class="el-icon-arrow-down el-icon--right"></i>
                     </span> -->
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item>设置</el-dropdown-item>
+                        <el-dropdown-item
+                            @click.native="edit"
+                        >设置</el-dropdown-item>
                         <!-- 默认组件不支持原生的事件，需要做特殊处理.native修饰符 -->
                         <el-dropdown-item
                             @click.native="onLogout"
                         >退出</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
+                <el-dialog title="用户信息编辑"
+                  :visible.sync="editUserForm"
+                  :append-to-body="true"
+                  width="30%"
+                  center
+                >
+                  <el-form :model="editForm">
+                    <el-form-item label="用户ID" :label-width="formLabelWidth">
+                      <el-input v-model="editForm.user_id" :disabled="true"></el-input>
+                    </el-form-item>
+                    <el-form-item label="用户名" :label-width="formLabelWidth">
+                      <el-input v-model="editForm.user_name"></el-input>
+                    </el-form-item>
+                    <el-form-item label="密码" :label-width="formLabelWidth">
+                      <el-input v-model="editForm.user_password"></el-input>
+                    </el-form-item>
+                    <el-form-item label="电话" :label-width="formLabelWidth">
+                      <el-input v-model="editForm.user_phone"></el-input>
+                    </el-form-item>
+                    <el-form-item label="昵称" :label-width="formLabelWidth">
+                      <el-input v-model="editForm.user_call"></el-input>
+                    </el-form-item>
+                  </el-form>
+                  <div slot="footer" class="dialog-footer">
+                    <el-button type="primary" @click="editUserInfo">确 定</el-button>
+                    <el-button @click="editUserForm = false">取 消</el-button>
+                  </div>
+                </el-dialog>
             </el-header>
             <el-main class="main">
                 <!-- 子路由出口 -->
@@ -51,7 +81,7 @@
 
 <script>
 import AppAside from './components/aside'
-import { getUserInfo } from '@/api/user'
+import { getUserInfo, editUser } from '@/api/user'
 
 export default {
   name: 'LayoutIndex',
@@ -62,7 +92,10 @@ export default {
   data () {
     return {
       user: {},
-      isCollapse: false // 侧边菜单栏的展开状态
+      isCollapse: false, // 侧边菜单栏的展开状态
+      editUserForm: false,
+      editForm: {},
+      formLabelWidth: '80px'
     }
   },
   computed: {},
@@ -75,7 +108,7 @@ export default {
     // 除了登录接口，其他所有的接口都得提供你的身份令牌
     loadInfo () {
       getUserInfo().then(res => {
-        this.user = res.data
+        this.user = res.data.data
         console.log(this.user)
         if (this.user.code === 507) {
           // 清除用户的登录状态
@@ -88,6 +121,28 @@ export default {
           })
         }
       })
+    },
+    edit (index, row) {
+      this.editUserForm = true
+      this.editForm = this.user
+    },
+    editUserInfo () {
+      const data = this.editForm
+      editUser(data).then((response) => {
+        this.loadInfo()
+        if (response.data.code === 201) {
+          this.$message({
+            type: 'success',
+            message: response.data.msg
+          })
+        } else {
+          this.$message({
+            type: 'error',
+            message: response.data.msg
+          })
+        }
+      })
+      this.editUserForm = false
     },
     onLogout () {
       this.$confirm('确认退出吗?', '提示', {
