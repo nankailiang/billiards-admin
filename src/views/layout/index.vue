@@ -8,6 +8,7 @@
             <app-aside
                 class="aside-menu"
                 :is-collapse="isCollapse"
+                :state="user.user_state"
             />
         </el-aside>
         <el-container>

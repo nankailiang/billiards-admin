@@ -71,7 +71,7 @@
             </el-table-column>
             <el-table-column
             prop="user_state"
-            label="用户状态"
+            label="超级管理员"
             width="140">
               <template slot-scope="scope">
                 <el-switch

@@ -13,7 +13,7 @@
       <i class="iconfont icon-taiqiu"></i>
       <span slot="title">球桌管理</span>
     </el-menu-item>
-    <el-menu-item index="/zone">
+    <el-menu-item v-show="state == '1' ? true : false" index="/zone">
       <i class="iconfont icon--fanweineiqianzhi"></i>
       <span slot="title">分区管理</span>
     </el-menu-item>
@@ -21,7 +21,7 @@
       <i class="iconfont icon-huiyuanguanli"></i>
       <span slot="title">会员管理</span>
     </el-menu-item>
-    <el-menu-item index="/user">
+    <el-menu-item v-show="state == '1' ? true : false" index="/user">
       <i class="iconfont icon-gerenzhongxin"></i>
       <span slot="title">用户管理</span>
     </el-menu-item>
@@ -37,7 +37,7 @@
       <i class="iconfont icon-xiaofei"></i>
       <span slot="title">消费记录</span>
     </el-menu-item>
-    <el-menu-item index="/analyse">
+    <el-menu-item v-show="state == '1' ? true : false" index="/analyse">
       <i class="iconfont icon-fenxi"></i>
       <span slot="title">数据分析</span>
     </el-menu-item>
@@ -48,7 +48,15 @@
 export default {
   name: 'AppAside',
   components: {},
-  props: ['is-collapse'],
+  props: ['is-collapse', 'state'],
+  // props: {
+  //   isCollapse: {
+  //     type: Boolean
+  //   },
+  //   state: {
+  //     type: Boolean
+  //   }
+  // },
   data () {
     return {
       index: ''
