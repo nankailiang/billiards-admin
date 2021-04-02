@@ -10,7 +10,8 @@
                 placeholder="按会员号查询"
                 prefix-icon="el-icon-user-solid"
                 v-model="memberId"
-                clearable>
+                clearable
+                @clear="loadMember">
             </el-input>
             <el-button slot="append" icon="el-icon-search" @click="idSearch" />
             <el-input
@@ -18,7 +19,8 @@
                 placeholder="按手机号查询"
                 prefix-icon="el-icon-phone"
                 v-model="phone"
-                clearable>
+                clearable
+                @clear="loadMember">
             </el-input>
             <el-button slot="append" icon="el-icon-search" @click="phoneSearch" />
             <el-input
@@ -26,7 +28,8 @@
                 placeholder="按姓名查询"
                 prefix-icon="el-icon-user"
                 v-model="memberName"
-                clearable>
+                clearable
+                @clear="loadMember">
             </el-input>
             <el-button slot="append" icon="el-icon-search" @click="nameSearch" />
             <el-button type="primary" plain icon="el-icon-circle-plus-outline" @click="addMemberForm = true">添加会员</el-button>

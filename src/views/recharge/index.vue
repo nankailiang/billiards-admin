@@ -10,7 +10,8 @@
                 placeholder="按会员号查询"
                 prefix-icon="el-icon-user-solid"
                 v-model="memberId"
-                clearable>
+                clearable
+                @clear="loadRecharge">
             </el-input>
             <el-button slot="append" icon="el-icon-search" @click="idSearch" />
         </div>

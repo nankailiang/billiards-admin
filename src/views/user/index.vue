@@ -19,7 +19,8 @@
                 placeholder="按手机号查询"
                 prefix-icon="el-icon-phone"
                 v-model="phone"
-                clearable>
+                clearable
+                @clear="loadUser">
             </el-input>
             <el-button slot="append" icon="el-icon-search" @click="phoneSearch" />
             <el-input
@@ -27,7 +28,8 @@
                 placeholder="按用户名查询"
                 prefix-icon="el-icon-user"
                 v-model="userName"
-                clearable>
+                clearable
+                @clear="loadUser">
             </el-input>
             <el-button slot="append" icon="el-icon-search" @click="nameSearch" />
             <el-button type="primary" plain icon="el-icon-circle-plus-outline" @click="addUserForm = true">添加用户</el-button>
