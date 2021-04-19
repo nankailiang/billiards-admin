@@ -5,6 +5,8 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
+// 引入第三方导出Excel表格数据
+import JsonExcel from 'vue-json-excel'
 
 // 加载echarts
 import echarts from 'echarts'
@@ -20,6 +22,8 @@ import './styles/index.scss'
 
 // 全局注册element组件库
 Vue.use(ElementUI)
+
+Vue.component('downloadExcel', JsonExcel)
 
 // 将echarts对象挂载到Vue的原型对象上
 Vue.prototype.$echarts = echarts

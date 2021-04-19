@@ -1,5 +1,11 @@
 <template>
     <div class="inmoney-container">
+        <download-excel
+          class = "out"
+          :data = "allData"
+          name = "近半年每月会员充值总和.xls">
+          <el-button size="mini" @click="exportData">导出Excel</el-button>
+        </download-excel>
         <div class="inmoney-chart" ref="inmoney_ref"></div>
     </div>
 </template>
@@ -75,12 +81,18 @@ export default {
 
 <style lang="scss" scoped>
 .inmoney-container {
+  .out {
+    position: relative;
+    top: 35px;
+    left: 405px;
+    z-index: 9;
+  }
   .inmoney-chart {
     width: 500px;
     height: 300px;
     box-shadow: 0 0 20px rgba(150, 150, 150, 0.3);
     border-radius: 10px;
-    margin-top: 20px;
+    // margin-top: 20px;
   }
 }
 </style>
