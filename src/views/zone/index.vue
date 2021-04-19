@@ -34,17 +34,22 @@
             <el-table-column
             prop="zone_id"
             label="分区ID"
-            width="240">
+            width="200">
             </el-table-column>
             <el-table-column
             prop="zone_name"
             label="分区名称"
-            width="260">
+            width="200">
             </el-table-column>
             <el-table-column
             prop="zone_money"
             label="分区价格(/h)"
-            width="240">
+            width="200">
+            </el-table-column>
+            <el-table-column
+            prop="member_money"
+            label="会员价格(/h)"
+            width="200">
             </el-table-column>
             <el-table-column
             label="操作">
@@ -86,8 +91,11 @@
             <el-form-item label="分区名称" :label-width="formLabelWidth">
               <el-input v-model="addForm.zone_name"></el-input>
             </el-form-item>
-            <el-form-item label="分区价格(/h)" :label-width="formLabelWidth">
+            <el-form-item label="分区价格" :label-width="formLabelWidth">
               <el-input v-model="addForm.zone_money"></el-input>
+            </el-form-item>
+            <el-form-item label="会员价格" :label-width="formLabelWidth">
+              <el-input v-model="addForm.member_money"></el-input>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -108,8 +116,11 @@
             <el-form-item label="分区名称" :label-width="formLabelWidth">
               <el-input v-model="editForm.zone_name"></el-input>
             </el-form-item>
-            <el-form-item label="分区价格(/h)" :label-width="formLabelWidth">
+            <el-form-item label="分区价格" :label-width="formLabelWidth">
               <el-input v-model="editForm.zone_money"></el-input>
+            </el-form-item>
+            <el-form-item label="会员价格" :label-width="formLabelWidth">
+              <el-input v-model="editForm.member_money"></el-input>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -137,12 +148,14 @@ export default {
       formLabelWidth: '80px',
       addForm: {
         zone_name: '',
-        zone_money: ''
+        zone_money: '',
+        member_money: ''
       },
       editForm: {
         zone_id: '',
         zone_name: '',
-        zone_money: ''
+        zone_money: '',
+        member_money: ''
       },
       total: 20,
       currentPage: 1,
@@ -161,7 +174,6 @@ export default {
       getZone().then(res => {
         this.zoneData = res.data.data
         this.total = this.zoneData.length
-        console.log(this.zoneData)
       })
     },
     addZoneInfo () {
@@ -204,7 +216,6 @@ export default {
       this.editZoneForm = false
     },
     deleteZoneInfo (index, row) {
-      console.log(index, row.zone_id)
       this.$confirm('是否删除此分区?', '提示', {
         cancelButtonText: '取消',
         confirmButtonText: '确定',

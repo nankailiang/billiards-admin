@@ -36,7 +36,7 @@
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item
                             @click.native="edit"
-                        >设置</el-dropdown-item>
+                        >编辑</el-dropdown-item>
                         <!-- 默认组件不支持原生的事件，需要做特殊处理.native修饰符 -->
                         <el-dropdown-item
                             @click.native="onLogout"
@@ -110,8 +110,7 @@ export default {
     loadInfo () {
       getUserInfo().then(res => {
         this.user = res.data.data
-        console.log(this.user)
-        if (this.user.code === 507) {
+        if (res.data.code !== 201) {
           // 清除用户的登录状态
           window.localStorage.removeItem('token')
           // 跳转到登录页面
