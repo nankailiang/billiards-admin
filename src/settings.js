@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: '临沂大学台球厅管理系统',
+  title: '台球厅管理系统',
 
   /**
    * @type {boolean} true | false

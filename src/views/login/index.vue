@@ -48,8 +48,8 @@ export default {
   data () {
     return {
       user: {
-        name: 'admin', // 账号
-        password: '111111' // 密码
+        name: '', // 账号
+        password: '' // 密码
       },
       loginLoading: false,
       formRules: { // 表单验证配置

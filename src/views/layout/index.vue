@@ -22,7 +22,7 @@
                         }"
                         @click="isCollapse = !isCollapse"
                     ></i>
-                    <span>临沂大学台球厅管理系统</span>
+                    <span>台球厅管理系统</span>
                 </div>
                 <el-dropdown>
                     <div class="avatar-wrap">
